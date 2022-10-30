@@ -21,9 +21,9 @@ public class PostController {
     @PostMapping("")
     public String generateGamePost(@AuthenticationPrincipal UserDetailsImpl userDetails,
                                    @RequestPart("content") String content,
-                                   @RequestPart("file") MultipartFile multipartFile) {
+                                   @RequestPart("file") List<MultipartFile> multipartFile) {
         Long memberId = userDetails.getAccount().getMemberId();
-        return postService.createPost(memberId, content, multipartFile);
+        return postService.createPost(memberId,content,multipartFile);
     }
 
     @GetMapping("")

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter
 @Entity
@@ -27,9 +28,10 @@ public class Post {
 
     private String content;
 
-    private String path;
+    @ElementCollection
+    private List<String> path;
 
-    public Post(Member member, String content, String path) {
+    public Post(Member member, String content, List<String> path) {
         this.member = member;
         this.content = content;
         this.path = path;

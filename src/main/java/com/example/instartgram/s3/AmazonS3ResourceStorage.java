@@ -11,6 +11,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -20,16 +22,14 @@ public class AmazonS3ResourceStorage {
     private String bucket;
     private final AmazonS3Client amazonS3Client;
 
-    public int store(String  path, MultipartFile multipartFile) {
+    public void store(String  path, MultipartFile multipartFile) {
         File file = new File(Objects.requireNonNull(multipartFile.getOriginalFilename()));
         try {
             file = convert(multipartFile);
             amazonS3Client.putObject(new PutObjectRequest(bucket, path, file)
                     .withCannedAcl(CannedAccessControlList.PublicRead));
-            return 1;
         } catch (Exception e) {
-//            throw new RuntimeException();
-            return 0;
+            throw new RuntimeException();
         } finally {
             if (file.exists()) {
                 file.delete();
@@ -37,8 +37,13 @@ public class AmazonS3ResourceStorage {
         }
     }
 
-    public String getimg(String path) {
-        return amazonS3Client.getUrl(bucket,path).toString();
+    public List<String> getimg(List<String> path) {
+        List<String> urls = new ArrayList<>();
+        path.forEach(url -> {
+            String geturl = amazonS3Client.getUrl(bucket,url).toString();
+            urls.add(geturl);
+        });
+        return urls;
     }
 
     public void delimg(String path) {

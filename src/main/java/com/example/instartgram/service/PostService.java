@@ -24,14 +24,20 @@ public class PostService {
     private final MemberRepository memberRepository;
 
     @Transactional
-    public String createPost(Long memberId, String content, MultipartFile multipartFile) {
+    public String createPost(Long memberId, String content, List<MultipartFile> multipartFile) {
         Member member = isPresentMember(memberId);
 
-        String path = MultipartUtil.createPath(MultipartUtil.createFileId(), MultipartUtil.getFormat(multipartFile.getContentType()));
+        List<String> paths = new ArrayList<>();
 
-        int num = amazonS3ResourceStorage.store(path, multipartFile);
+        multipartFile.forEach(file -> {
+            String path = MultipartUtil.createPath(MultipartUtil.createFileId(), MultipartUtil.getFormat(file.getContentType()));
+            paths.add(path);
+            amazonS3ResourceStorage.store(path, file);
+        });
 
-        Post post = new Post(member, content, path);
+//        String path = MultipartUtil.createPath(MultipartUtil.createFileId(), MultipartUtil.getFormat(multipartFile.getContentType()));
+
+        Post post = new Post(member, content, paths);
         postRepository.save(post);
 
         return "성공";
