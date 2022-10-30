@@ -27,7 +27,13 @@ public class PostController {
     }
 
     @GetMapping("")
-    public List<PostResDto> getAllGamePostTrue() throws ParseException {
-        return postService.getAllGamePost();
+    public List<PostResDto> getAllGamePostTrue(@AuthenticationPrincipal UserDetailsImpl userDetails) throws ParseException {
+        return postService.getAllGamePost(userDetails.getAccount().getMemberId());
+    }
+
+    @PostMapping("/like")
+    public String like(@RequestBody Long postId,
+                       @AuthenticationPrincipal UserDetailsImpl userDetails){
+        return postService.like(postId,userDetails.getAccount().getMemberId());
     }
 }

@@ -1,8 +1,12 @@
 package com.example.instartgram.service;
 
 import com.example.instartgram.dto.res.PostResDto;
+import com.example.instartgram.entity.Like;
 import com.example.instartgram.entity.Member;
 import com.example.instartgram.entity.Post;
+import com.example.instartgram.exception.CustomException;
+import com.example.instartgram.exception.ErrorCode;
+import com.example.instartgram.repository.LikeRepository;
 import com.example.instartgram.repository.MemberRepository;
 import com.example.instartgram.repository.PostRepository;
 import com.example.instartgram.s3.AmazonS3ResourceStorage;
@@ -22,6 +26,7 @@ public class PostService {
     private final AmazonS3ResourceStorage amazonS3ResourceStorage;
     private final PostRepository postRepository;
     private final MemberRepository memberRepository;
+    private final LikeRepository likeRepository;
 
     @Transactional
     public String createPost(Long memberId, String content, List<MultipartFile> multipartFile) {
@@ -44,17 +49,36 @@ public class PostService {
     }
 
     @Transactional
-    public List<PostResDto> getAllGamePost(){
+    public List<PostResDto> getAllGamePost(Long memberId){
+        Member member = isPresentMember(memberId);
         List<Post> posts = postRepository.findAll();
 
         List<PostResDto> postResDtos = new ArrayList<>();
 
         for(Post post:posts){
-            PostResDto postResDto = new PostResDto(post.getPostId(), post.getContent(), amazonS3ResourceStorage.getimg(post.getPath()));
+            Boolean likeCheck = likeRepository.existsByPostAndMember(post, member);
+            PostResDto postResDto = new PostResDto(post.getPostId(), post.getContent(), amazonS3ResourceStorage.getimg(post.getPath()), likeCheck);
             postResDtos.add(postResDto);
         }
 
         return postResDtos;
+    }
+
+    @Transactional
+    public String like(Long postId, Long memberId) {
+        Member member = isPresentMember(memberId);
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_POST));
+
+        if(!likeRepository.existsByPostAndMember(post, member)){
+            Like like = new Like(post,member);
+            likeRepository.save(like);
+            return "좋아요 누르기";
+        } else{
+            likeRepository.deleteByPostAndMember(post,member);
+            return "좋아요 취소하기";
+        }
     }
 
     public Member isPresentMember(Long memberId) {

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -30,6 +31,9 @@ public class Post {
 
     @ElementCollection
     private List<String> path;
+
+    @OneToMany(mappedBy = "post")
+    List<Like> like = new ArrayList<>();
 
     public Post(Member member, String content, List<String> path) {
         this.member = member;

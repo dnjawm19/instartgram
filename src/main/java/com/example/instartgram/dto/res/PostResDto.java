@@ -12,9 +12,12 @@ public class PostResDto {
     private String content;
     private List<String> imgUrl;
 
-    public PostResDto(Long postId, String content, List<String> imgUrl){
+    private Boolean likeCheck;
+
+    public PostResDto(Long postId, String content, List<String> imgUrl, Boolean likeCheck){
         this.postId = postId;
         this.content = content;
         this.imgUrl = imgUrl;
+        this.likeCheck = likeCheck;
     }
 }

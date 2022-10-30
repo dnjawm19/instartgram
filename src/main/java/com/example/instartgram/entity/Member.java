@@ -8,6 +8,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Entity
@@ -28,6 +29,12 @@ public class Member extends Timestamped{
 
     @Column(nullable = false)
     private String password;
+
+    @OneToMany(mappedBy = "member")
+    List<Post> post = new ArrayList<>();
+
+    @OneToMany(mappedBy = "member")
+    List<Like> like = new ArrayList<>();
 
     public Member(MemberReqDto memberReqDto) {
         this.userName = memberReqDto.getUserName();
