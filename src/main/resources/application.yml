@@ -1,0 +1,19 @@
+spring:
+  profiles:
+    include: aws
+
+  servlet:
+    multipart:
+      max-file-size: 256KB
+      max-request-size: 256KB
+
+  h2:
+    console:
+      enabled: true
+
+  jpa:
+    properties:
+      hibernate:
+        format_sql: true
+    hibernate:
+      ddl-auto: update
