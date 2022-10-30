@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class Member extends Timestamped{
 
     @Id
-    @Column(name = "memberid")
+    @Column(name = "memberId")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberId;
 
