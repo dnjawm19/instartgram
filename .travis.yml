@@ -9,9 +9,8 @@ cache:
   - "$HOME/.m2/repository"
   - "$HOME/.gradle"
 before_install:
-- openssl aes-256-cbc -K $encrypted_279d18307899_key -iv $encrypted_279d18307899_iv
-  -in aws.tar.enc -out aws.tar -d
-- tar xvf aws.tar
+- openssl aes-256-cbc -K $encrypted_a6c7bc5d9194_key -iv $encrypted_a6c7bc5d9194_iv
+  -in application-aws.properties.enc -out application-aws.properties -d
 - chmod +x gradlew
 script: "./gradlew clean build"
 notifications:
