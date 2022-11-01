@@ -9,10 +9,13 @@ cache:
   - "$HOME/.m2/repository"
   - "$HOME/.gradle"
 before_install:
-- openssl aes-256-cbc -K $encrypted_a6c7bc5d9194_key -iv $encrypted_a6c7bc5d9194_iv -in application-aws.properties.enc -out application-aws.properties -d
-- chmod +x gradlew
+  - openssl aes-256-cbc -k "$super_secret_password" -in application-aws.properties.enc -out application-aws.properties -d
+  - chmod +x gradlew
 script: "./gradlew clean build"
 notifications:
   email:
     recipients:
     - dnajwm1995@gmail.com
+env:
+  global:
+    secure: H0UYF3ywsqdQ6K1DH5vIS9looD+0bNZN5z0IvQRyKoMEGfoGGZJBkdL1EzK/Q54jsvOAK86YPqOTfrzgI4vbqqD00De9XSxHkLovQszLQfe31P9KxJpjJT5DnbJXkXcfOXQZJU4L18CttZCjiPHEr0SP3vjPFLmXikWYUADs+HjWA0OyZC6c1VYrRlj+azjT6v9ij/Wpfo9LauSjTN+fF2T1NkllSx+TPVvO3D66WpCIxcKhK5RNENbDIVNy4kwHGvmJTYDGq8UarwPY8k1J+7m9PI3RfROQgn29putSxHUNxQVU53mMfF+NIKqb3mTf9TdPUhE1x2Wq1m5ayicHkOJCqS9oJ5bpLaKjHoRsImRYNYKi4cjiiUdySt0qgPqINYMtRnCU3kyAEsXhQGPrUEwQFUB6ui6vypabgj4BGWo47KAKBXSq2vRhXnaBtKUqnKmqjJ2duEamVOn611xLeLRtCO6L1mmoJ/jDNkEb8H8W5ZmTYzjojtMqyIDpKVfMx6wwgNayWQkOf1WxMjF5CJlju//aZNeMoNDT0WDOzGU8qgN9uGSFfV05bxgy1Otat+wGUgHyAhuZQ77zoIhnU6wsnt4JVTWRMG0y2l6eeeKuJrzayFaySp2RFiDhniFkkQYzY26YYvLRNEGVmQNwpBifS8gBGc2CAX7heFUg5ZA=
