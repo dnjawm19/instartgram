@@ -25,8 +25,7 @@ bin/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-application-aws.properties
-aws.tar
+#application-aws.properties
 
 ### NetBeans ###
 /nbproject/private/
