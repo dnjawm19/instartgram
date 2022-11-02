@@ -20,6 +20,10 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    env:
+      AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_KEY }}
+      AWS_REGION: 'ap-northeast-2'
 
     steps:
     - uses: actions/checkout@v3
@@ -48,12 +52,7 @@ jobs:
       run: zip -r -qq -j ./springboot-intro-build.zip ./deploy
 
     # S3 Bucket으로 copy
-    - name: Deliver to AWS S3
+    - name: Upload binary to S3 bucket
+      uses: jakejarvis/s3-sync-action@master
       env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.ACCESS_KEY }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS }}
-      run: |
-        aws s3 cp \
-        --region ap-northeast-2 \
-        --acl private \ 
-        ./springboot-intro-build.zip s3://springboot-intro-build/
+        AWS_S3_BUCKET: ${{ secrets.BUCKET_NAME }}
